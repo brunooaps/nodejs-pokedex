@@ -8,13 +8,15 @@ const hbs = exphbs.create({defaultLayout: 'main'})
 
 app.engine('handlebars', hbs.engine)
 
-app.set('/pokemon/:name', async (req, res) => {
+app.set('view engine', 'handlebars')
+
+app.get('/pokemon/:name', async (req, res) => {
     try {
         const {name} = req.params
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
-        const pokemon = response.defaultLayout
+        const pokemon = response.data
     
-        res.render('pokemon', pokemon)
+        res.render('pokemon', {pokemon})
     } catch (error) {
         res.send(404).render('error', {message: error})
     }
